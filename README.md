@@ -1,4 +1,4 @@
-PythonConsole is a C# command-line application in a Visual Studio solution. It demonstrates how to get an authentication token and how to use the Text Translation API to translate text from one language to text in another language.
+PythonConsole is a command-line application in a Visual Studio solution. It demonstrates how to get an authentication token and how to use the Text Translation API to translate text from one language to text in another language.
 
 The sample application only offers translation between 5 languages, but the service offers translations for 50+ languages.
 
