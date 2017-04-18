@@ -1,40 +1,12 @@
-﻿import websocket
-import thread
-import json
-import requests
-import urllib
-import wave
-import audioop
-from time import sleep
-import StringIO
-import struct
-import sys
-import codecs
+﻿"""
+Example application showing the use of the Translate method in the Text Translation API.
+"""
+
 from xml.etree import ElementTree
+from auth import AzureAuthClient
+import requests
 
-
-doItAgain = "yes" #Control While loop
-
-
-def GetToken(): #Get the access token from ADM, token is good for 10 minutes
-    urlArgs = {
-        'client_id': 'ENTER YOU CLIENT ID',
-        'client_secret': 'ENTER YOUR CLIENT SECRET',
-        'scope': 'http://api.microsofttranslator.com',
-        'grant_type': 'client_credentials'
-    }
-
-    oauthUrl = 'https://datamarket.accesscontrol.windows.net/v2/OAuth2-13'
-
-    try:
-        oauthToken = json.loads(requests.post(oauthUrl, data = urllib.urlencode(urlArgs)).content) #make call to get ADM token and parse json
-        finalToken = "Bearer " + oauthToken['access_token'] #prepare the token
-    except OSError:
-        pass
-
-    return finalToken
-#End GetToken
-
+doItAgain = "yes"
 
 def GetTextAndTranslate(finalToken):
 
@@ -50,7 +22,7 @@ def GetTextAndTranslate(finalToken):
     print "     Spanish"
     print "     French"
 
-    #Get the source Language
+    # Get the source language
     while (fromLangCode == " "):
         sourceLang = raw_input("Type the name of a language from the list that you want to translate from: ")
 
@@ -68,13 +40,11 @@ def GetTextAndTranslate(finalToken):
             print " "
             print "You need to pick a language from the List"
 
-            error = raw_input("Press any key to continue")
+            raw_input("Press any key to continue")
 
-    #End while
-    
     print " "
 
-    #Get the desitination Language
+    # Get the destination language
     while (toLangCode == " "):
         destLang = raw_input("Type the name of a language from the list that you want to translate to: ")
 
@@ -92,43 +62,36 @@ def GetTextAndTranslate(finalToken):
             print " "
             print "You need to pick a language from the List"
 
-            error = raw_input("Press any key to continue")
+            raw_input("Press any key to continue")
 
-    #End while
-    
     print " "
 
     textToTranslate = raw_input("Type the text that you want to translate:  ")
 
     print " "
 
-    #Call to Microsoft Translator Service
+    # Call to Microsoft Translator Service
     headers = {"Authorization ": finalToken}
     translateUrl = "http://api.microsofttranslator.com/v2/Http.svc/Translate?text={}&to={}".format(textToTranslate, toLangCode)
-   
-    try:
-        translationData = requests.get(translateUrl, headers = headers) #make request
-        translation = ElementTree.fromstring(translationData.text.encode('utf-8')) # parse xml return values
-        print "The translation is---> ", translation.text #display translation
 
-    except OSError:
-        pass
+    translationData = requests.get(translateUrl, headers = headers)
+    # parse xml return values
+    translation = ElementTree.fromstring(translationData.text.encode('utf-8'))
+    # display translation
+    print "The translation is---> ", translation.text
 
     print " "
- 
-#End GetTextAndTranslate()
 
 
 if __name__ == "__main__":
-    
-    finalToken = GetToken()
+
+    client_secret = 'ENTER_YOUR_CLIENT_SECRET'
+    auth_client = AzureAuthClient(client_secret)
+    bearer_token = 'Bearer ' + auth_client.get_access_token()
 
     while (doItAgain == 'yes') or (doItAgain == 'Yes'):
-        GetTextAndTranslate(finalToken)
+        GetTextAndTranslate(bearer_token)
         print ' '
         doItAgain = raw_input('Type yes to translate more, any other key to end: ')
-    #end while
-        
-    goodBye = raw_input('Thank you for using Microsoft Translator, we appreciate it. Good Bye')
 
-#end main
+    goodBye = raw_input('Thank you for using Microsoft Translator, we appreciate it. Good Bye')
