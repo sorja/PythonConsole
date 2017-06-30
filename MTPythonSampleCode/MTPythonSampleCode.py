@@ -26,7 +26,7 @@ def GetTextAndTranslate(finalToken):
     while (fromLangCode == " "):
         sourceLang = raw_input("Type the name of a language from the list that you want to translate from: ")
 
-        if (sourceLang == "english") or (sourceLang == "English"):
+        if (sourceLang == "English") or (sourceLang == "english"):
             fromLangCode = "en"
         elif (sourceLang == "German") or (sourceLang == "german"):
             fromLangCode = "de"
@@ -48,7 +48,7 @@ def GetTextAndTranslate(finalToken):
     while (toLangCode == " "):
         destLang = raw_input("Type the name of a language from the list that you want to translate to: ")
 
-        if (destLang == "english") or (destLang == "English"):
+        if (destLang == "English") or (destLang == "english"):
             toLangCode = "en"
         elif (destLang == "German") or (destLang == "german"):
             toLangCode = "de"
